@@ -1,9 +1,10 @@
-class Maxheap {
+class Priorityqueue {
   constructor() {
     this.values = [];
   }
-  insert(val) {
-    this.values.push(val);
+  enqueue(val, priority) {
+    let newNode = new Node(val, priority);
+    this.values.push(newNode);
     this.bubbleUp();
   }
   bubbleUp() {
@@ -12,19 +13,19 @@ class Maxheap {
     while (idx > 0) {
       let parentIdx = Math.floor((idx - 1) / 2);
       let parentElement = this.values[parentIdx];
-      if (element <= parentElement) break;
+      if (element.priority >= parentElement.priority) break;
       this.values[parentIdx] = element;
       this.values[idx] = parentElement;
       idx = parentIdx;
     }
   }
 
-  remove() {
-    let max = this.values[0];
+  dequeue() {
+    let min = this.values[0];
     let end = this.values.pop();
     this.values[0] = end;
     this.bubbleDown();
-    return max;
+    return min;
   }
 
   bubbleDown() {
@@ -46,7 +47,7 @@ class Maxheap {
 
       if (leftChildIdx < length) {
         leftChild = this.values[leftChildIdx];
-        if (leftChild > element) {
+        if (leftChild.priority < element.priority) {
           swaped = leftChildIdx;
         }
       }
@@ -54,8 +55,8 @@ class Maxheap {
       if (rightChildIdx < length) {
         rightChild = this.values[rightChildIdx];
         if (
-          (swaped === null && rightChild > element) ||
-          (swaped !== null && rightChild > leftChild)
+          (swaped === null && rightChild.priority < element.priority) ||
+          (swaped !== null && rightChild.priority < leftChild.priority)
         ) {
           swaped = rightChildIdx;
         }
@@ -69,35 +70,20 @@ class Maxheap {
   }
 }
 
-let binaryHeap1 = new Maxheap();
-let yoo = [41, 39, 33, 18, 27, 12, 55, 88, 92];
-yoo.map((val) => binaryHeap1.insert(val));
+class Node {
+  constructor(val, priority) {
+    this.val = val;
+    this.priority = priority;
+  }
+}
 
-console.log(binaryHeap1.values);
+let Emergency = new Priorityqueue();
 
-let val1 = binaryHeap1.remove();
+Emergency.enqueue("common cold", 5);
+Emergency.enqueue("gunshot wound", 1);
+Emergency.enqueue("high fever", 4);
+Emergency.enqueue("broken arm", 2);
+Emergency.enqueue("glass in foot", 3);
 
-console.log(val1);
-console.log(binaryHeap1.values);
-
-let val2 = binaryHeap1.remove();
-
-console.log(val2);
-console.log(binaryHeap1.values);
-
-let val3 = binaryHeap1.remove();
-
-console.log(val3);
-console.log(binaryHeap1.values);
-
-let val4 = binaryHeap1.remove();
-
-console.log(val4);
-console.log(binaryHeap1.values);
-//   33
-// 44  55
-
-// check if there is right and left
-//check which is bigger left or right
-// the one which is bigger check if it is bigger than element right
-//if yes swap other wise no
+let serve1 = Emergency.dequeue();
+console.log(serve1);
