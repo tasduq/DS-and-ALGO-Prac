@@ -3,14 +3,77 @@ class Priorityqueue {
     this.values = [];
   }
   enqueue(val, priority) {
-    this.values.push({ val, priority });
-    this.sort();
+    let newNode = new Node(val, priority);
+    this.values.push(newNode);
+    this.bubbleUp();
   }
+  bubbleUp() {
+    let idx = this.values.length - 1;
+    let element = this.values[idx];
+    while (idx > 0) {
+      let parentIdx = Math.floor((idx - 1) / 2);
+      let parentElement = this.values[parentIdx];
+      if (element.priority >= parentElement.priority) break;
+      this.values[parentIdx] = element;
+      this.values[idx] = parentElement;
+      idx = parentIdx;
+    }
+  }
+
   dequeue() {
-    return this.values.shift();
+    let min = this.values[0];
+    let end = this.values.pop();
+    this.values[0] = end;
+    this.bubbleDown();
+    return min;
   }
-  sort() {
-    this.values.sort((a, b) => a.priority - b.priority);
+
+  bubbleDown() {
+    let idx = 0;
+    let length = this.values.length;
+    let element = this.values[0];
+
+    while (true) {
+      // console.log("loop is running again with index", idx);
+      var swaped;
+      var leftChildIdx;
+      var rightChildIdx;
+      var leftChild, rightChild;
+      leftChildIdx = 2 * idx + 1;
+      rightChildIdx = 2 * idx + 2;
+      swaped = null;
+
+      // if()
+
+      if (leftChildIdx < length) {
+        leftChild = this.values[leftChildIdx];
+        if (leftChild.priority < element.priority) {
+          swaped = leftChildIdx;
+        }
+      }
+
+      if (rightChildIdx < length) {
+        rightChild = this.values[rightChildIdx];
+        if (
+          (swaped === null && rightChild.priority < element.priority) ||
+          (swaped !== null && rightChild.priority < leftChild.priority)
+        ) {
+          swaped = rightChildIdx;
+        }
+      }
+
+      if (swaped === null) break;
+      this.values[idx] = this.values[swaped];
+      this.values[swaped] = element;
+      idx = swaped;
+    }
+  }
+}
+
+class Node {
+  constructor(val, priority) {
+    this.val = val;
+    this.priority = priority;
   }
 }
 
